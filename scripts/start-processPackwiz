@@ -19,9 +19,9 @@ if [[ -z mcVersion ]]; then
   exit 1
 fi
 
-VERSION="$mcVersion"
+export VERSION="$mcVersion"
 
 if [[ -n neoVersion ]]; then
-  NEOFORGE_VERSION="$neoVersion"
+  export NEOFORGE_VERSION="$neoVersion"
   TYPE="NEOFORGE"
 fi
