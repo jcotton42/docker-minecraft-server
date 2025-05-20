@@ -1,0 +1,27 @@
+#!/bin/bash
+
+if ! [[ -v PACKWIZ_URL ]]; then
+  logError "PACKWIZ_URL is required with TYPE=PACKWIZ"
+  exit 1
+fi
+
+if ! curl -fsSL -o /tmp/packwiz_pack.toml "$PACKWIZ_URL"; then
+  logError "Failed to download the packwiz pack.toml from $PACKWIZ_URL"
+  exit 1
+fi
+
+# definitely not ideal, using just awk, but enough to prove the concept
+mcVersion="$(awk -F'"' '/^minecraft *= *"/ { print $2 }' /tmp/packwiz_pack.toml)"
+neoVersion="$(awk -F'"' '/^neoforge *= *"/ { print $2 }' /tmp/packwiz_pack.toml)"
+
+if [[ -z mcVersion ]]; then
+  logError "Minecraft version was not specified in pack.toml"
+  exit 1
+fi
+
+VERSION="$mcVersion"
+
+if [[ -n neoVersion ]]; then
+  NEOFORGE_VERSION="$neoVersion"
+  TYPE="NEOFORGE"
+fi

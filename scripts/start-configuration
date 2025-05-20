@@ -218,6 +218,10 @@ if [[ $MODPACK_PLATFORM && $TYPE && $TYPE != VANILLA ]]; then
   logWarning "Avoid setting TYPE and MODPACK_PLATFORM"
 fi
 
+if [[ ${TYPE^^} == PACKWIZ ]]; then
+  . "${SCRIPTS:-/}start-processPackwiz"
+fi
+
 case "${TYPE^^}" in
   AUTO_CURSEFORGE|MODRINTH|CURSEFORGE|FTB|FTBA|GTNH)
     MODPACK_PLATFORM="$TYPE"
