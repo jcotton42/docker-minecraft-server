@@ -36,6 +36,7 @@ if isTrue "${REMOVE_OLD_MODS}" && [ -z "${MODS_FILE}" ]; then
 fi
 
 function handlePackwiz() {
+  # TODO delete this function and its call
   # If packwiz url passed, bootstrap packwiz and update mods before other modpack processing
   if [[ "${PACKWIZ_URL:-}" ]]; then
     if ! packwizInstaller=$(mc-image-helper maven-download \
@@ -356,8 +357,6 @@ function handleCurseForgeFiles() {
     "${args[@]}" \
     "${CURSEFORGE_FILES}"
 }
-
-handlePackwiz
 
 handleModpackZip
 

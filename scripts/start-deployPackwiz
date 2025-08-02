@@ -1,0 +1,39 @@
+#!/bin/bash
+set -eu
+
+# shellcheck source=start-utils
+. "${SCRIPTS:-/}start-utils"
+
+resultsFile=/data/.install-packwiz.env
+
+: "${PACKWIZ_PACK:=${PACKWIZ_URL:-}}"
+: "${PACKWIZ_FORCE_UPDATE:=}"
+
+if [[ ! $PACKWIZ_PACK ]]; then
+  logError "PACKWIZ_PACK must be set when using TYPE/MODPACK_PLATFORM/MOD_PLATFORM of PACKWIZ"
+  exit 1
+fi
+
+isDebugging && set -x
+
+ensureRemoveAllModsOff "MODPACK_PLATFORM=PACKWIZ"
+
+args=(
+  --results-file="$resultsFile"
+  --pack="$PACKWIZ_PACK"
+  --output-directory="/data"
+)
+
+if [[ $PACKWIZ_FORCE_UPDATE ]]; then
+  args+=(--force-update "$PACKWIZ_FORCE_UPDATE")
+fi
+
+if ! mc-image-helper install-packwiz-modpack "${args[@]}"; then
+  logError "Failed to install packwiz modpack"
+  exit 1
+fi
+
+applyResultsFile "$resultsFile"
+resolveFamily
+
+exec "${SCRIPTS:-/}start-setupWorld" "$@"
